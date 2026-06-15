@@ -5,25 +5,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Représente une zone de fusion de données (Texte ou Image) positionnée sur un template de carte.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ChampCarte {
     private int id;
-    private int templateId; // Clé étrangère vers le Template
-
-    private String nomColonne; // Ex: "Nom", "Matricule" (Fera le lien avec le fichier Excel)
+    private int templateId;
+    private String nomColonne;
     private TypeChamp type;
 
-    // Coordonnées spatiales (Position et dimensions sur l'image)
     private double x;
     private double y;
     private double largeur;
     private double hauteur;
 
-    // Propriétés de style (spécifiques au texte)
     private String nomPolice;
     private int taillePolice;
-    private String couleurHex; // Ex: "#000000"
+    private String couleurHex;
 }

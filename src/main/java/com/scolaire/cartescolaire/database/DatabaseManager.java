@@ -5,31 +5,33 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Gère la connexion et l'initialisation de la base de données SQLite embarquée.
+ */
 public class DatabaseManager {
 
-    // Chemin vers le fichier local SQLite. Il sera créé à la racine du projet.
     private static final String URL = "jdbc:sqlite:cartescolaire.db";
 
     /**
-     * Établit la connexion avec la base de données SQLite.
-     * @return L'objet Connection
+     * Établit une connexion avec la base de données.
+     *
+     * @return L'objet Connection actif.
+     * @throws SQLException Si la connexion à la base de données échoue.
      */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL);
     }
 
     /**
-     * Initialise la base de données en créant les tables si elles n'existent pas.
+     * Initialise le schéma de la base de données.
+     * Crée les tables nécessaires (templates, champs) si elles n'existent pas encore.
      */
     public static void initialiserBaseDeDonnees() {
-        // Le bloc try-with-resources ferme automatiquement la connexion et le statement à la fin
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Activer les contraintes de clés étrangères (désactivées par défaut sur SQLite)
             stmt.execute("PRAGMA foreign_keys = ON;");
 
-            // 1. Création de la table Templates
             String sqlTemplates = "CREATE TABLE IF NOT EXISTS templates (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "nom_projet TEXT NOT NULL," +
@@ -40,7 +42,6 @@ public class DatabaseManager {
                     ");";
             stmt.execute(sqlTemplates);
 
-            // 2. Création de la table Champs (Liée à un template)
             String sqlChamps = "CREATE TABLE IF NOT EXISTS champs (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "template_id INTEGER," +
@@ -57,10 +58,8 @@ public class DatabaseManager {
                     ");";
             stmt.execute(sqlChamps);
 
-            System.out.println("Base de données SQLite initialisée avec succès.");
-
         } catch (SQLException e) {
-            System.err.println("Erreur lors de l'initialisation de la base de données : " + e.getMessage());
+            System.err.println("Erreur d'initialisation DB : " + e.getMessage());
         }
     }
 }

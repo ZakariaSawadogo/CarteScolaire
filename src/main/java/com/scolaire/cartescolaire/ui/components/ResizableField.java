@@ -1,18 +1,44 @@
 package com.scolaire.cartescolaire.ui.components;
 
+import com.scolaire.cartescolaire.models.TypeChamp;
 import javafx.scene.Cursor;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * Composant graphique interactif représentant une zone de dessin redimensionnable et déplaçable.
+ */
 public class ResizableField extends Rectangle {
 
-    private final double[] dragDelta = new double[2];
-    private final boolean[] isResizing = new boolean[3]; // 0=Sud-Est, 1=Est, 2=Sud
+    private enum ResizeMode { NONE, EAST, SOUTH, SOUTH_EAST }
+
     private static final int RESIZE_MARGIN = 8;
     private static final int MIN_SIZE = 20;
 
-    public ResizableField(double x, double y) {
+    private final double[] dragDelta = new double[2];
+    private ResizeMode resizeMode = ResizeMode.NONE;
+
+    @Setter @Getter private String nomChamp;
+    @Setter @Getter private TypeChamp type;
+    @Setter @Getter private String nomPolice = "Arial";
+    @Setter @Getter private int taillePolice = 14;
+    @Setter @Getter private Color couleurTexte = Color.BLACK;
+
+    /**
+     * Crée un nouveau champ interactif sur le plan de travail.
+     *
+     * @param x    Coordonnée X initiale.
+     * @param y    Coordonnée Y initiale.
+     * @param type Le type de donnée (Texte, Image) que contiendra ce champ.
+     */
+    public ResizableField(double x, double y, TypeChamp type) {
         super(x, y, 0, 0);
+        this.type = type;
+        this.nomChamp = (type == TypeChamp.TEXTE) ? "Nouveau Texte" : "Nouvelle Image";
+
         appliquerStyleParDefaut();
         initialiserInteractivite();
     }
@@ -41,36 +67,42 @@ public class ResizableField extends Rectangle {
         else this.setCursor(Cursor.HAND);
     }
 
-    private void handleMousePressed(javafx.scene.input.MouseEvent e) {
-        if (this.getCursor() == Cursor.SE_RESIZE) isResizing[0] = true;
-        else if (this.getCursor() == Cursor.E_RESIZE) isResizing[1] = true;
-        else if (this.getCursor() == Cursor.S_RESIZE) isResizing[2] = true;
+    private void handleMousePressed(MouseEvent e) {
+        if (this.getCursor() == Cursor.SE_RESIZE) resizeMode = ResizeMode.SOUTH_EAST;
+        else if (this.getCursor() == Cursor.E_RESIZE) resizeMode = ResizeMode.EAST;
+        else if (this.getCursor() == Cursor.S_RESIZE) resizeMode = ResizeMode.SOUTH;
         else {
+            resizeMode = ResizeMode.NONE;
             dragDelta[0] = this.getX() - e.getX();
             dragDelta[1] = this.getY() - e.getY();
         }
-        e.consume(); // Empêche la propagation de l'événement au parent (le Workspace)
+        e.consume();
     }
 
-    private void handleMouseDragged(javafx.scene.input.MouseEvent e) {
-        if (isResizing[0]) {
-            this.setWidth(Math.max(MIN_SIZE, e.getX() - this.getX()));
-            this.setHeight(Math.max(MIN_SIZE, e.getY() - this.getY()));
-        } else if (isResizing[1]) {
-            this.setWidth(Math.max(MIN_SIZE, e.getX() - this.getX()));
-        } else if (isResizing[2]) {
-            this.setHeight(Math.max(MIN_SIZE, e.getY() - this.getY()));
-        } else {
-            this.setX(e.getX() + dragDelta[0]);
-            this.setY(e.getY() + dragDelta[1]);
+    private void handleMouseDragged(MouseEvent e) {
+        switch (resizeMode) {
+            case SOUTH_EAST -> {
+                this.setWidth(Math.max(MIN_SIZE, e.getX() - this.getX()));
+                this.setHeight(Math.max(MIN_SIZE, e.getY() - this.getY()));
+            }
+            case EAST -> this.setWidth(Math.max(MIN_SIZE, e.getX() - this.getX()));
+            case SOUTH -> this.setHeight(Math.max(MIN_SIZE, e.getY() - this.getY()));
+            case NONE -> {
+                this.setX(e.getX() + dragDelta[0]);
+                this.setY(e.getY() + dragDelta[1]);
+            }
         }
         e.consume();
     }
 
-    private void handleMouseReleased(javafx.scene.input.MouseEvent e) {
-        isResizing[0] = false;
-        isResizing[1] = false;
-        isResizing[2] = false;
+    private void handleMouseReleased(MouseEvent e) {
+        resizeMode = ResizeMode.NONE;
         e.consume();
+    }
+
+    @Override
+    public String toString() {
+        String typeStr = (this.type == TypeChamp.TEXTE) ? "[Texte] " : "[Image] ";
+        return typeStr + this.nomChamp;
     }
 }

@@ -15,29 +15,39 @@
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="Importer Template" />
+                <Button text="Importer Template" onAction="#onImporterTemplate" />
                 <Button text="Importer Excel" />
-                <Pane HBox.hgrow="ALWAYS" /> <Button text="Générer les Cartes" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button text="Générer les Cartes" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
             </ToolBar>
         </VBox>
     </top>
 
     <left>
-        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 0 1 0 0;" prefWidth="150">
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 0 1 0 0;" prefWidth="200">
             <Label text="Outils" style="-fx-font-weight: bold;"/>
-            <ToggleButton text="Tracer Texte" maxWidth="Infinity" />
-            <ToggleButton text="Tracer Image" maxWidth="Infinity" />
+
+            <fx:define>
+                <ToggleGroup fx:id="groupeOutils"/>
+            </fx:define>
+
+            <ToggleButton fx:id="btnSelection" text="Sélection" toggleGroup="$groupeOutils" selected="true" maxWidth="Infinity" />
+            <ToggleButton fx:id="btnTexte" text="Tracer Texte" toggleGroup="$groupeOutils" maxWidth="Infinity" />
+            <ToggleButton fx:id="btnImage" text="Tracer Image" toggleGroup="$groupeOutils" maxWidth="Infinity" />
+
+            <Separator style="-fx-padding: 10 0 10 0;" />
+
+            <Label text="Champs Créés" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="listeChampsUI" VBox.vgrow="ALWAYS" style="-fx-background-radius: 5;" />
         </VBox>
     </left>
 
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: #cfcfcf;">
             <StackPane style="-fx-padding: 30;">
-
                 <Pane fx:id="drawingPane" maxWidth="-Infinity" maxHeight="-Infinity" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);">
                     <ImageView fx:id="templateImageView" preserveRatio="true" />
                 </Pane>
-
             </StackPane>
         </ScrollPane>
     </center>

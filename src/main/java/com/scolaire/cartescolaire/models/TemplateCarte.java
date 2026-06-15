@@ -7,19 +7,18 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Représente un projet global de confection contenant les designs visuels et leurs champs associés.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class TemplateCarte {
     private int id;
-    private String nomProjet; // Ex: "Cartes 2024-2025"
-
-    // Chemins absolus vers les images locales (C:/.../template_recto.png)
+    private String nomProjet;
     private String cheminImageRecto;
     private String cheminImageVerso;
-
-    // Dimensions originales de l'image pour garder les proportions
     private double largeurImage;
     private double hauteurImage;
 

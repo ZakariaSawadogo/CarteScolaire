@@ -7,19 +7,20 @@ import lombok.NoArgsConstructor;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Représente un étudiant dont les données seront fusionnées sur les cartes.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Etudiant {
     private int id;
-    private String matricule; // Souvent utilisé comme identifiant unique
+    private String matricule;
     private String nom;
     private String prenom;
-    private String cheminPhotoProfil; // Chemin absolu vers la photo sur le disque
+    private String cheminPhotoProfil;
 
-    // Pour rendre le logiciel évolutif : on stocke les colonnes Excel supplémentaires
-    // (ex: "Classe", "Date Naissance", "Groupe Sanguin") dans une Map dynamique.
     @Builder.Default
     private Map<String, String> donneesSupplementaires = new HashMap<>();
 }
