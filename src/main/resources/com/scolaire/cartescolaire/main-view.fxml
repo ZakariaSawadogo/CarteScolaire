@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.scolaire.cartescolaire.ui.controllers.MainController">
+
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Fichier">
+                    <MenuItem text="Nouveau Projet" />
+                    <MenuItem text="Quitter" />
+                </Menu>
+            </MenuBar>
+            <ToolBar>
+                <Button text="Importer Template" />
+                <Button text="Importer Excel" />
+                <Pane HBox.hgrow="ALWAYS" /> <Button text="Générer les Cartes" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 0 1 0 0;" prefWidth="150">
+            <Label text="Outils" style="-fx-font-weight: bold;"/>
+            <ToggleButton text="Tracer Texte" maxWidth="Infinity" />
+            <ToggleButton text="Tracer Image" maxWidth="Infinity" />
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: #cfcfcf;">
+            <StackPane style="-fx-padding: 30;">
+
+                <Pane fx:id="drawingPane" maxWidth="-Infinity" maxHeight="-Infinity" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);">
+                    <ImageView fx:id="templateImageView" preserveRatio="true" />
+                </Pane>
+
+            </StackPane>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
